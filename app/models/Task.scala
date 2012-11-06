@@ -47,17 +47,25 @@ object Task {
   }
 
 	def findByUserId(userId: Long, daysBefore: Int = -7): List[UserTask] = {
+	  val now = new org.joda.time.DateTime()
+	  val monday = new java.sql.Timestamp(now.withDayOfWeek(org.joda.time.DateTimeConstants.MONDAY).withHourOfDay(0).getMillis)
+	  val sunday = new java.sql.Timestamp(now.withDayOfWeek(org.joda.time.DateTimeConstants.SUNDAY).withHourOfDay(23).getMillis)
+	  
 		DB.withConnection { implicit c =>
 			SQL("""
 				select t.*, u.*, s.*
 				from task t
 				join users u on u.id = t.userId
 				join server s on s.id = t.serverId
-				where t.startedAt > dateadd('day', {daysBefore}, current_date())
+			    where t.startedAt between {monday} and {sunday}
 				order by t.startedAt desc
 				"""
 			)
-			.on("daysBefore" -> daysBefore)
+			.on(
+			    "daysBefore" -> daysBefore,
+			    "monday" -> monday,
+			    "sunday"-> sunday
+			    )
 			.as(withUserAndServer *) map (row => UserTask(row._2, row._1, row._3))
 		}
 	}
