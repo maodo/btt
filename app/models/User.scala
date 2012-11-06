@@ -1,10 +1,11 @@
 package models
-
+	
 import anorm._
 import anorm.SqlParser._
 
 import play.api.db._
 import play.api.Play.current
+import play.api.libs.Crypto
 
 case class User(id: Pk[Long] = NotAssigned, name: String, pwd: String, admin: Boolean)
 
@@ -25,7 +26,7 @@ object User {
 		DB.withConnection { implicit c =>
 			SQL("select * from User where name = {name} and pwd = {pwd}")
 			.on("name" -> name,
-				"pwd" -> pwd)
+				"pwd" -> encrypt(pwd))
 			.as(User.simple.singleOpt)
 		}
 	}
@@ -61,7 +62,7 @@ object User {
 		DB.withConnection { implicit c =>
     		SQL("insert into user (name, pwd, admin) values ({name}, {pwd}, {admin})").
 			on("name" -> user.name,
-	  			"pwd" -> user.pwd,
+	  			"pwd" -> encrypt(user.pwd),
 	  			"admin" -> user.admin).
 			executeUpdate()
  		 }
@@ -74,5 +75,11 @@ object User {
 			.executeUpdate()
 		}
 	}
+	
+	//===================================
+	// Helper methods
+	//===================================
 
+	def encrypt(password: String) = Crypto.sign(password)
+	
 }
