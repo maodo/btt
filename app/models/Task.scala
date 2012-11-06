@@ -51,7 +51,7 @@ object Task {
 			SQL("""
 				select t.*, u.*, s.*
 				from task t
-				join user u on u.id = t.userId
+				join users u on u.id = t.userId
 				join server s on s.id = t.serverId
 				where t.startedAt > dateadd('day', {daysBefore}, current_date())
 				order by t.startedAt desc
