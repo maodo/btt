@@ -1,0 +1,24 @@
+@(endedUserBuilds: List[UserBuild])
+
+@import utils._
+
+<h4 class="border-bottom1">@Messages("builds.ended")</h4>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>@Messages("server")</th>
+			<th>@Messages("builds.started.at")</th>
+			<th>@Messages("duration")</th>
+		</tr>
+	</thead>
+	<tbody>
+	@for(userBuild <- endedUserBuilds) {
+	<tr class="@if(userBuild.build.failed) { error } else { success }">
+		<td>@userBuild.server.name</td>
+		<td>@DateUtils.format(userBuild.build.startedAt)</td>
+		<td>@DurationFormatter(userBuild.build.duration)</td>
+	</tr>
+	}
+	</tbody>
+</table>

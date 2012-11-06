@@ -1,0 +1,24 @@
+@(user: User)
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+ 	<div id="home-navbar" class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">@Messages("btt")</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/">@Messages("navbar.home")</a></li>
+              @if(user.admin) {
+            	<li><a href="@routes.Admin.index">@Messages("navbar.admin")</a></li>
+          		}
+            </ul>
+            <p class="navbar-text pull-right logout-link"><a href="@routes.Login.logout">@Messages("logout.do")</a></p>
+            <p class="navbar-text pull-right"><i>@user.name</i></p>
+          </div><!--/.nav-collapse -->
+        </div>
+  	</div>
+</div>

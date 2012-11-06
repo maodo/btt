@@ -1,0 +1,93 @@
+@(user: User, users: List[User], userForm: Form[models.User], servers: List[Server], serverForm: Form[models.Server])(implicit flash: Flash)
+
+@import helper._
+@import helper.twitterBootstrap._
+@import tags._
+
+@main {
+    @navbar(user)
+} {
+} {
+    <div id="admin-users">
+        <h2>@Messages("admin.user.list") (@users.size)</h2>
+
+        @flashAlert("userSuccess")(flash)
+        @form(routes.Admin.newUser, args = 'class -> "pull-left form-inline") {
+
+            @error(userForm.errors)
+
+            <input class="input-small" type="text" name="name" id="name" value="@userForm("name").value" />
+            <input class="input-small" type="password" name="pwd" id="pwd" />
+            <span>Admin:</span>
+            <select name="admin" id="admin">
+                <option value="false">@Messages("no")</value>
+                <option value="true">@Messages("yes")</value>
+            </select>
+
+            <input class="btn btn-inverse" type="submit" value="@Messages("new")" />
+        }
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>@Messages("admin.name")</th>
+                    <th>@Messages("admin.user.admin")</th>
+                    <th>@Messages("actions")</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for(user <- users) {
+                <tr>
+                    <td>@user.id</td>
+                    <td>@user.name</td>
+                    <td>@boolean2check(user.admin)</td>
+                    <td>
+                        <a class="btn btn-danger" href="@routes.Admin.deleteUser(user.id.get)">@Messages("delete")</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="admin-servers">
+        <h2>@Messages("admin.server.list") (@servers.size)</h2>
+
+        @flashAlert("serverSuccess")(flash)
+        @form(routes.Admin.newServer, args = 'class -> "pull-left form-inline") {
+
+            @error(serverForm.errors)
+
+            <input class="input-small" type="text" name="name" id="name" value="@serverForm("name").value" />
+            <label for="active">Active:</label>
+            <select name="active" id="active">
+                <option value="true">@Messages("yes")</value>
+                <option value="false">@Messages("no")</value>
+            </select>
+
+            <input class="btn btn-inverse" type="submit" value="@Messages("new")" />
+        }
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>@Messages("admin.name")</th>
+                    <th>@Messages("admin.server.active")</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for(server <- servers) {
+                <tr>
+                    <td>@server.id</td>
+                    <td>@server.name</td>
+                    <td>@boolean2check(server.active)</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

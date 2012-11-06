@@ -1,0 +1,42 @@
+@(loginForm: Form[(String, String)])(implicit flash: Flash)
+
+@import helper._
+@import tags._
+
+@main {
+} {
+    @herounit {
+    <h2>@Messages("btt")</h2>
+    <h3>@Messages("btt.hero.title")</h3>
+    <p>@Messages("btt.hero.description")</p>
+    }
+} {
+<div class="row container-login">
+    <div class="span6 offset3">
+        @form(action = routes.Login.authenticate, args = 'class -> "form-inline") {
+            <input class="input-small" placeholder="@Messages("login.name")" type="text" name="name" id="name" value="@loginForm("name").value">
+            <input class="input-small" type="password" name="pwd" id="pwd" placeholder="@Messages("login.password")">
+            <button type="submit" class="btn btn-large btn-primary">@Messages("login.do")</button>
+        }
+
+         @loginForm.globalError.map { error =>
+        <div class="alert alert-block alert-error fade in">
+            <p>@error.message</p>
+        </div>
+        }
+        
+        @flash.get("success").map { message =>
+        <div class="alert fade in">
+            <p>@message</p>
+        </div>
+        }
+        <div class="infos">
+            <p><small>@defining(Messages("login.test.message")) { loginTest =>
+                    @Html(loginTest)
+                }</small>
+                
+            </p>
+        </div>
+    </div>
+</div>
+}

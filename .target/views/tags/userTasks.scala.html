@@ -1,0 +1,24 @@
+@(userTasks: List[UserTask], messageHeader: String, showUserName: Boolean, isCurrentUser: Boolean = false)
+
+<h3>@Messages(messageHeader) @totalTimeUserTasks(userTasks)</h3>
+
+@if(userTasks.isEmpty) {
+<p>@Messages("builds.listEmpty")</p>
+} else {
+	@userTasks.groupBy(_.user).map { user =>
+
+		@if(showUserName) {
+		<h3>@user._1.name.toUpperCase @totalTimeUserTasks(user._2)</h3>
+		}
+
+		@** Move this in a specific class **@
+		@user._2.groupBy(_.task.duration <= 0).toSeq.sortBy(_._1 == false).map {
+			case (true, activeUserTasks) => {
+				@userTasksActive(activeUserTasks, isCurrentUser)
+			}
+			case (false, endedUserTasks) => {
+				@userTasksEnded(endedUserTasks)
+			}
+		}
+	}
+}

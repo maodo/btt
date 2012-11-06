@@ -1,0 +1,16 @@
+@(user: User, sidebarItem: String)(content: Html)
+
+
+@import helper.twitterBootstrap._
+@import tags._
+
+@main {
+    @navbar(user)
+} {
+} {
+    @sidebar(sidebarItem)
+
+    <div class="span8">
+    	@content
+    </div>
+}

@@ -1,0 +1,45 @@
+@(currentUser: User, servers: List[Server], serverForm: Form[Server])(implicit flash: Flash)
+
+@import helper._
+@import tags._
+
+@index(currentUser, "servers") {
+<div  class="row-fluid" id="admin-servers">
+    <h2>@Messages("admin.server.list") (@servers.size)</h2>
+
+    @flashAlert("serverSuccess")(flash)
+    @form(routes.Admin.newServer, args = 'class -> "pull-left form-inline") {
+
+        @error(serverForm.errors)
+
+        <input class="input-small" type="text" name="name" id="name" value="@serverForm("name").value" />
+        <label for="active">Active:</label>
+        <select name="active" id="active">
+            <option value="true">@Messages("yes")</value>
+            <option value="false">@Messages("no")</value>
+        </select>
+
+        <input class="btn btn-inverse" type="submit" value="@Messages("new")" />
+    }
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>@Messages("admin.name")</th>
+                <th>@Messages("admin.server.active")</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for(server <- servers) {
+            <tr>
+                <td>@server.id</td>
+                <td>@server.name</td>
+                <td>@boolean2check(server.active)</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}

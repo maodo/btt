@@ -1,0 +1,28 @@
+body {
+	padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+footer {
+	padding: 15px 0 5px 0;
+	margin: 0 auto;
+	width: 100%;
+	background: #363736;
+	background: #EEE;
+	color: #AAA;
+}
+
+.border-bottom1 {
+	border-bottom: 1px solid #DDD;
+}
+
+.container-login, .align-center {
+	text-align: center;
+}
+
+.hero-unit {
+	padding: 30px;
+}
+.logout-link {
+	margin-left: 5px;
+}

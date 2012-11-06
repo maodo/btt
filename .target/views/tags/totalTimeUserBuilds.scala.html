@@ -1,0 +1,5 @@
+@(buildsList: List[UserBuild])
+
+@import utils.DurationFormatter
+
+(@DurationFormatter(buildsList.map(x => x.build.duration).sum))

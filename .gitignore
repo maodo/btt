@@ -1,0 +1,9 @@
+.settings
+bin
+logs
+target
+/.cache
+/.classpath
+/go.bat
+/.project
+/RUNNING_PID

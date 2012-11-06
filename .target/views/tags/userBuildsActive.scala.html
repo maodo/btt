@@ -1,0 +1,36 @@
+@(activeUserBuilds: List[UserBuild], isCurrentUser: Boolean = false)
+
+<h4 class="border-bottom1">@Messages("builds.inprogress")</h4>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>@Messages("server")</th>
+			<th>@Messages("since")</th>
+			@if(isCurrentUser) {
+			<th>@Messages("builds.started.status")</th>
+			}
+		</tr>
+	</thead>
+	<tbody>
+	@for(userBuild <- activeUserBuilds) {
+	<tr>
+		<td>@userBuild.server.name</td>
+		<td>@userBuild.build.since</td>
+		@if(isCurrentUser) {
+		<td>
+			<a href="@routes.Builds.stop(userBuild.build.id.get)">
+				<button class="btn btn-success" type="button">@Messages("builds.success")</button>
+			</a>
+			<a href="@routes.Builds.fail(userBuild.build.id.get)">
+				<button class="btn btn-danger" type="button">@Messages("builds.inerror")</button>
+			</a>
+			<a href="@routes.Builds.cancel(userBuild.build.id.get)">
+				<button class="btn btn-inverse" type="button">@Messages("builds.cancel")</button>
+			</a>
+		</td>
+		}
+	</tr>
+	}
+	</tbody>
+</table>

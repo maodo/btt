@@ -1,0 +1,64 @@
+# btt introduction
+btt=Boot Time Tracker!
+btt.hero.title=Mesurons le temps passé...
+btt.hero.description=Trop souvent, nous devons builder du code, le déployer sur un serveur d''application et attendre. Boot Time Tracker va vous permettre de lister ces démarrages de serveurs, ou ces tâches de build à répétition et extraire des statistiques. Peut être qu''un jour... Boot Time Tracker est une application Play 2.0 pour tout le temps perdu...
+
+# common
+yes=Oui
+no=Non
+andet=et
+actions=Actions
+new=Nouveau
+delete=Supprimer
+user=Utilisateur
+server=Serveur
+duration=Durée
+since=Depuis
+failed.bool=Echec?
+go=Démarrer
+
+# builds
+builds.list=Liste des builds
+builds.listEmpty=Aucun build
+builds.new.boot=Nouveau démarrage
+builds.from.current.user=Mes démarrages
+builds.started.at=Démarré à
+builds.from.others.user=Les démarrages des collègues
+builds.started.status=Démarré?
+builds.ended=Terminé
+builds.inprogress=En cours
+builds.success=Succés
+builds.inerror=En erreur
+builds.cancel=Annuler
+builds.failed.after.start=Echec après démarrage?
+
+# builds duration
+day=jour
+hour=hour
+minute=minute
+second=second
+
+# login
+login.fail.notice=Login ou mot de passe invalide!
+login.test.message=Essayez avec <em>test</em> en login et <em>test</em> en mot de passe.
+login.do=Se logguer
+login.name=Nom
+login.password=Mot de passe
+login.as=Loggué en tant que
+# logout
+logout.do=Déconnexion
+logout.notice=Vous avez été déconnecté...
+
+# navbar menu
+navbar.home=Accueil
+navbar.admin=Administration
+
+# admin
+admin.user.list=Liste des utilisateurs
+admin.user.new.success=Nouvel utilisateur "{0}"" ajouté!
+admin.user.alreadyExists=Un utilisateur avec ce login existe déjà!
+admin.name=Nom
+admin.user.admin=Admin?
+admin.server.list=Liste des serveurs
+admin.server.new.success=Nouveau serveur ajouté!
+admin.server.active=Actif?

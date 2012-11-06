@@ -1,0 +1,5 @@
+@(tasks: List[UserTask])
+
+@import utils.DurationFormatter
+
+(@DurationFormatter(tasks.map(x => x.task.duration).sum))
