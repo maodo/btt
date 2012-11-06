@@ -1,6 +1,7 @@
 .settings
 bin
 logs
+.target
 target
 /.cache
 /.classpath
