@@ -19,7 +19,7 @@ CREATE TABLE task (
     id serial PRIMARY KEY,
     userId integer NOT NULL,
     serverId integer NOT NULL,
-    startedAt integer NOT NULL,
+    startedAt bigint NOT NULL,
     duration integer NOT NULL default 0,
     failed boolean NOT NULL default false
 );
