@@ -30,6 +30,6 @@ alter table task add constraint fk_task_server foreign key (serverId) references
 
 # --- !Downs
  
+DROP TABLE task;
 DROP TABLE users;
 DROP TABLE server;
-DROP TABLE build;
