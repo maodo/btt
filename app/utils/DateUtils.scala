@@ -5,10 +5,10 @@ import org.joda.time._
 
 object DateUtils {
 	
-	def secondsSince(startDate: Date): Int =
-		new Duration(new DateTime(startDate.getTime()), new DateTime()).toStandardSeconds().getSeconds();
+	def secondsSince(millis: Long): Int =
+		new Duration(new DateTime(millis), new DateTime()).toStandardSeconds().getSeconds();
 
-	def format(date: Date): String = {
-		new DateTime(date.getTime()).toString("E MM/dd/yyyy HH:mm:ss")
+	def format(millis: Long): String = {
+		new DateTime(millis).toString("E MM/dd/yyyy HH:mm:ss")
 	}
 }

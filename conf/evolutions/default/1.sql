@@ -19,8 +19,8 @@ CREATE TABLE task (
     id serial PRIMARY KEY,
     userId integer NOT NULL,
     serverId integer NOT NULL,
-    startedAt timestamp NOT NULL,
-    duration integer NOT NULL default -1,
+    startedAt long NOT NULL,
+    duration integer NOT NULL default 0,
     failed boolean NOT NULL default false
 );
 
