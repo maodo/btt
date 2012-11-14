@@ -14,7 +14,11 @@ import utils._
 case class Task(id: Pk[Long], userId: Long, serverId: Long, startedAt: Long, duration: Int, failed: Boolean) {
 
   def since(): String = {
-    DurationFormatter(DateUtils.secondsSince(startedAt))
+    DateUtils.since(DateUtils.secondsSince(startedAt))
+  }
+  
+  def millisElapsed(): Long = {
+    System.currentTimeMillis() - startedAt
   }
 }
 
@@ -45,8 +49,30 @@ object Task {
   val withUserAndServer = Task.simple ~ User.simple ~ Server.simple map {
     case task ~ user ~ server => (task, user, server)
   }
+  
+  def totalDurations: Long = {
+    val values = DB.withConnection { implicit c =>
+      SQL("select t.* from task t")
+        .as(simple *)
+    }
 
-  def findByUserId(userId: Long, daysBefore: Int = -7): List[UserTask] = {
+    val groups = values.groupBy(_.duration > 0)
+    val result = groups.map { g =>
+      g._1 match {
+        case true => {
+          g._2.map(_.duration).toList.sum
+        }
+        case false => {
+          g._2.map(_.millisElapsed).toList.sum
+        }
+      }
+    }
+
+    result.sum
+  }
+
+  // TODO: add week parameter.
+  def listForWeek(): List[UserTask] = {
     val now = new org.joda.time.DateTime()
     val mondayMillis = now.withDayOfWeek(org.joda.time.DateTimeConstants.MONDAY).withHourOfDay(0).getMillis
     val sundayMillis = now.withDayOfWeek(org.joda.time.DateTimeConstants.SUNDAY).withHourOfDay(23).getMillis
@@ -60,7 +86,6 @@ object Task {
 				order by t.startedAt desc
 				""")
         .on(
-          "daysBefore" -> daysBefore,
           "monday" -> mondayMillis,
           "sunday" -> sundayMillis)
         .as(withUserAndServer *) map (row => UserTask(row._2, row._1, row._3))

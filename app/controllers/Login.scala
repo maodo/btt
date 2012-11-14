@@ -1,13 +1,13 @@
 package controllers
 
-import play.api._
-import play.api.i18n._
-import play.api.mvc._
-import play.api.data._
+import models.User
+import play.api.data.Form
 import play.api.data.Forms._
-
-import models._
+import play.api.i18n.Messages
+import play.api.libs.iteratee.Enumerator
+import play.api.mvc._
 import views._
+import play.api.libs.iteratee.Iteratee
 
 /**
  * Inspired by https://github.com/playframework/Play20/blob/master/samples/scala/zentasks
@@ -17,13 +17,11 @@ object Login extends Controller {
   val loginForm = Form(
     tuple(
       "name" -> nonEmptyText,
-      "pwd" -> text
-    ) verifying (Messages("login.fail.notice"), result => result match {
-      case (name, pwd) =>  User.authenticate(name, pwd).isDefined
-    })
-  )
+      "pwd" -> text) verifying (Messages("login.fail.notice"), result => result match {
+        case (name, pwd) => User.authenticate(name, pwd).isDefined
+      }))
 
-   def login = Action { implicit request =>
+  def login = Action { implicit request =>
     Ok(html.login(loginForm))
   }
 
@@ -33,8 +31,7 @@ object Login extends Controller {
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(html.login(formWithErrors)),
-      user => Redirect(routes.Tasks.index).withSession(Security.username-> user._1)
-    )
+      user => Redirect(routes.Tasks.index).withSession(Security.username -> user._1))
   }
 
   /**
@@ -42,8 +39,7 @@ object Login extends Controller {
    */
   def logout = Action {
     Redirect(routes.Login.login).withNewSession.flashing(
-      "success" -> Messages("logout.notice")
-    )
+      "success" -> Messages("logout.notice"))
   }
 
 }
@@ -52,7 +48,7 @@ object Login extends Controller {
  * Provide security features
  */
 trait Secured {
-  
+
   /**
    * Basic type for secured request.
    */
@@ -68,32 +64,34 @@ trait Secured {
    */
   private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Login.login)
 
-  /** 
+  /**
    * Action for authenticated users.
    */
   def IsAuthenticated(f: => String => Request[AnyContent] => Result) = {
     Security.Authenticated(username, onUnauthorized) {
-  		user => Action(request => f(user)(request))
+      user => Action(request => f(user)(request))
     }
   }
 
   /**
    * Wrap the IsAuthenticated method to also fetch your user.
    */
-  def withUser(f: RequestUserSecure) = IsAuthenticated { username => implicit request =>
-    User.findByName(username).map { user =>
-      f(user)(request)
-    }.getOrElse(onUnauthorized(request))
-  } 
+  def withUser(f: RequestUserSecure) = IsAuthenticated { username =>
+    implicit request =>
+      User.findByName(username).map { user =>
+        f(user)(request)
+      }.getOrElse(onUnauthorized(request))
+  }
 
   /**
    * Wrap the IsAuthenticated method to also fetch your user and check if its an admin.
    */
-  def withUserAdmin(f: RequestUserSecure) = IsAuthenticated { username => implicit request =>
-    User.findByName(username).map { user =>
-      if (user.admin) f(user)(request)
-      else Results.Forbidden
-    }.getOrElse(onUnauthorized(request))
+  def withUserAdmin(f: RequestUserSecure) = IsAuthenticated { username =>
+    implicit request =>
+      User.findByName(username).map { user =>
+        if (user.admin) f(user)(request)
+        else Results.Forbidden
+      }.getOrElse(onUnauthorized(request))
   }
- 
+
 }

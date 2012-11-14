@@ -1,9 +1,8 @@
 import java.util.Date
-
 import play.api._
-
 import models._
 import anorm._
+import java.util.concurrent.TimeUnit
 
 object Global extends GlobalSettings {
 
@@ -39,8 +38,8 @@ object InitialData {
 
       val userTest = User.findIdByName("test")
       Seq(
-        Task(userTest, Server.findIdByName("Jboss 5"), System.currentTimeMillis(), 120, false),
-        Task(userTest, Server.findIdByName("Jboss 4"), System.currentTimeMillis(), 60, false),
+        Task(userTest, Server.findIdByName("Jboss 5"), System.currentTimeMillis(), TimeUnit.SECONDS.toMillis(120).toInt, false),
+        Task(userTest, Server.findIdByName("Jboss 4"), System.currentTimeMillis(), TimeUnit.SECONDS.toMillis(60).toInt, false),
         Task(userTest, Server.findIdByName("Jboss 5")),
         Task(userTest, Server.findIdByName("Jboss 5")),
         Task(userTest, Server.findIdByName("Jboss 5"))

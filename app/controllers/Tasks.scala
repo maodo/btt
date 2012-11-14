@@ -18,12 +18,14 @@ object Tasks extends Controller with Secured {
   )
   
   def index = withUser { user => _ => 
-  	val Tasks = Task.findByUserId(user.id.get)
+  	val Tasks = Task.listForWeek
   	val TasksByUsers = Tasks groupBy (_.user.id == user.id)
+  	val totalDuration = Task.totalDurations
 
   	// TODO: maybe do the flat shit in an other place
     Ok(html.tasks(
 		user,
+		totalDuration,
 		newTaskForm,
 		Server.listAsOptions(),
 		TasksByUsers getOrElse(true, List()),

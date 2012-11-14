@@ -7,19 +7,26 @@ class TestTaskModel extends Specification {
 
   "Task model" should {
 
-    "list all tasks of an user" in {
+    "list for a week" in {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-        val tasks = Task.findByUserId(1)
+        val tasks = Task.listForWeek
 
         tasks must not be empty
+      }
+    }
+    
+    "calculate total duration" in {
+      running(FakeApplication()) {
+       val totalDuration = Task.totalDurations
+       totalDuration.intValue() must be_>(0)
       }
     }
 
     "create task" in {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-        val tasksSize = Task.findByUserId(1).size
+        val tasksSize = Task.listForWeek.size
         Task.create(Task(1, 3))
-        tasksSize.toInt must be_<(Task.findByUserId(1).size.toInt)
+        tasksSize.toInt must be_<(Task.listForWeek.size.toInt)
       }
     }
 
@@ -27,7 +34,7 @@ class TestTaskModel extends Specification {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         Task.stop(1)
 
-        val tasks = Task.findByUserId(1)
+        val tasks = Task.listForWeek
         val taskById1 = tasks.find(_.task.id.get == 1).get.task
         taskById1.duration must be_>(0)
         taskById1.failed must beFalse
@@ -37,7 +44,7 @@ class TestTaskModel extends Specification {
     "fail a task" in {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         Task.fail(2)
-        val tasks = Task.findByUserId(1)
+        val tasks = Task.listForWeek
         val taskById2 = tasks.find(_.task.id.get == 2).get.task
         taskById2.duration must be_>(0)
         taskById2.failed must beTrue
@@ -48,7 +55,7 @@ class TestTaskModel extends Specification {
       running(FakeApplication()) {
         Task.cancel(3)
 
-        val tasks = Task.findByUserId(1)
+        val tasks = Task.listForWeek
         tasks.find(_.task.id.get == 3) must beNone
       }
     }
